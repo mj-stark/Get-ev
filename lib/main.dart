@@ -30,8 +30,12 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   int _currentIndex = 0; // Initialize _currentIndex
 
+  
+
+
   @override
   Widget build(BuildContext context) {
+   
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(20),
@@ -41,14 +45,14 @@ class _MainAppState extends State<MainApp> {
             children: [
               Container(
                 alignment: Alignment.topCenter,
-                height: 150,
-                width: 150,
+                height: MediaQuery.of(context).size.height * 0.25,
+                width: MediaQuery.of(context).size.width,
                 child: Image.asset(
                   "assets/images/logo.png",
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: 70),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
               CarouselSlider(
                 options: CarouselOptions(
                   aspectRatio: 1.0,
@@ -71,8 +75,8 @@ class _MainAppState extends State<MainApp> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            height: 200,
-                            width: 200,
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            width: MediaQuery.of(context).size.width * 0.5,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
@@ -85,7 +89,7 @@ class _MainAppState extends State<MainApp> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                           Text(
                             text,
                             textAlign: TextAlign.center,
@@ -94,7 +98,7 @@ class _MainAppState extends State<MainApp> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                           Text(
                             text.startsWith("All your")
                                 ? "A healthy lifestyle awaits you"
@@ -121,9 +125,9 @@ class _MainAppState extends State<MainApp> {
                   activeSize: Size(12, 12),
                 ),
               ),
-              SizedBox(height: 80),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.08),
               Container(
-                height: 50,
+                height: MediaQuery.of(context).size.height * 0.06,
                 width: 250,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
