@@ -68,24 +68,7 @@ class SignupPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
-                    Center(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Address',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Center(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          labelText: 'State of Origin',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
+                    
                     SizedBox(height: 20),
                     Center(
                       child: Container(

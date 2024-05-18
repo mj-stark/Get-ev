@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:get_ev/LoginPage.dart';
 import 'package:get_ev/Signup.dart';
 
 

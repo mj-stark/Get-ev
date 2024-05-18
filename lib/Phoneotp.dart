@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_ev/LoginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Phoneotp extends StatefulWidget {
@@ -233,7 +234,16 @@ class _PhoneotpState extends State<Phoneotp> {
           controllers[3].text;
       _otpGenerated = true;
                 if (_enteredOTP == savedOTP) {
-                  _showSuccessDialog();
+                  
+                  Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return LoginPage();
+                                },
+                              ),
+                            );
+                            _showSuccessDialog();
                 } else {
                   // Handle incorrect OTP
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
