@@ -187,7 +187,7 @@ class _MainAppState extends State<MainApp> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return SignupPage();
+                          return LoginPage();
                         },
                       ),
                     );

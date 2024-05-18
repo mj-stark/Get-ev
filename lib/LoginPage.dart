@@ -8,6 +8,72 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late String _phoneNumber;
+  late bool _showOTPInput = false;
+  late TextEditingController _otpController = TextEditingController();
+  late bool _otpVerified = false;
+  late TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _confirmPasswordController =
+      TextEditingController();
+  late bool _isProcessing = false;
+
+  Future<void> _generateOTP() async {
+    // Generate OTP logic here
+    // For demo purposes, setting a default OTP
+    final String generatedOTP = '1234';
+
+    // Show the OTP in an alert dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Generated OTP'),
+          content: Text('Your OTP is: $generatedOTP'),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _verifyOTP() {
+    // Implement OTP verification logic here
+    // For demo purposes, just set _otpVerified to true
+    setState(() {
+      _otpVerified = true;
+    });
+  }
+
+  void _changePassword() {
+    // Implement password change logic here
+    // For demo purposes, just print the new password
+    print('New Password: ${_passwordController.text}');
+    // Show success alert
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Success'),
+          content: Text('Your password has been changed successfully.'),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,9 +83,13 @@ class _LoginPageState extends State<LoginPage> {
           child: Stack(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.48,
+                height: MediaQuery.of(context).size.height * 0.6, // Adjusted height
                 child: Center(
-                  child: Image.asset("assets/images/logo.png",width: 200,height: 200,),
+                  child: Image.asset(
+                    "assets/images/logo.png",
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                  ),
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -27,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.35,
+                top: MediaQuery.of(context).size.height * 0.45, // Adjusted position
                 left: MediaQuery.of(context).size.width * 0.07,
                 right: MediaQuery.of(context).size.width * 0.07,
                 child: Container(
@@ -55,13 +125,12 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: InputDecoration(
                               hintText: 'Email',
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10)
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      
                       Container(
                         height: 70,
                         child: Padding(
@@ -70,26 +139,142 @@ class _LoginPageState extends State<LoginPage> {
                             decoration: InputDecoration(
                               hintText: 'Password',
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10)
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      
                       GestureDetector(
                         onTap: () {
-                          // Implement your forgot password logic here
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(
+                                builder: (BuildContext context, StateSetter setState) {
+                                  return Container(
+                                    padding: EdgeInsets.all(16),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        Text(
+                                          'Forgot Password?',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        SizedBox(height: 16),
+                                        Text(
+                                          'Enter your email or phone number to reset your password',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: 16),
+                                        TextField(
+                                          decoration: InputDecoration(
+                                            labelText: 'Email or Phone Number',
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _phoneNumber = value;
+                                            });
+                                          },
+                                        ),
+                                        SizedBox(height: 16),
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              _isProcessing = true;
+                                            });
+                                            await _generateOTP();
+                                            setState(() {
+                                              _showOTPInput = true;
+                                              _isProcessing = false;
+                                            });
+                                          },
+                                          child: Text('Send OTP'),
+                                        ),
+                                        if (_showOTPInput) ...[
+                                          SizedBox(height: 16),
+                                          TextField(
+                                            controller: _otpController,
+                                            decoration: InputDecoration(
+                                              labelText: 'Enter OTP',
+                                              border: OutlineInputBorder(),
+                                            ),
+                                            keyboardType: TextInputType.number,
+                                          ),
+                                          SizedBox(height: 16),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _isProcessing = true;
+                                              });
+                                              _verifyOTP();
+                                              setState(() {
+                                                _isProcessing = false;
+                                              });
+                                            },
+                                            child: Text('Verify OTP'),
+                                          ),
+                                        ],
+                                        if (_otpVerified) ...[
+                                          SizedBox(height: 16),
+                                          TextField(
+                                            controller: _passwordController,
+                                            decoration: InputDecoration(
+                                              labelText: 'New Password',
+                                              border: OutlineInputBorder(),
+                                            ),
+                                            obscureText: true,
+                                          ),
+                                          SizedBox(height: 16),
+                                          TextField(
+                                            controller: _confirmPasswordController,
+                                            decoration: InputDecoration(
+                                              labelText: 'Confirm Password',
+                                              border: OutlineInputBorder(),
+                                            ),
+                                            obscureText: true,
+                                          ),
+                                          SizedBox(height: 16),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _isProcessing = true;
+                                              });
+                                              _changePassword();
+                                              setState(() {
+                                                _isProcessing = false;
+                                              });
+                                              Navigator.pop(context); // Close the modal
+                                            },
+                                            child: Text('Change Password'),
+                                          ),
+                                        ],
+                                        if (_isProcessing) ...[
+                                          SizedBox(height: 16),
+                                          Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          );
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 6),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(
-                                color: Colors.blue,
-                              ),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(
+                              color: Colors.blue,
                             ),
                           ),
                         ),
