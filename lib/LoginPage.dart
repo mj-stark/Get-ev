@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_ev/FrontPage.dart';
 import 'package:get_ev/Signup.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key});
@@ -93,12 +94,12 @@ class _LoginPageState extends State<LoginPage> {
           child: Stack(
             children: [
               Container(
-                height: screenHeight * 0.45,
+                height: 400.h,
                 child: Center(
                   child: Image.asset(
                     "assets/images/logo.png",
-                    width: screenWidth * 0.5,
-                    height: screenHeight * 0.5,
+                    width: 200.w,
+                    height: 250.h,
                   ),
                 ),
                 decoration: BoxDecoration(
@@ -113,7 +114,8 @@ class _LoginPageState extends State<LoginPage> {
                 right: screenWidth * 0.07,
                 child: Container(
                   width: screenWidth * 0.8,
-                  padding: EdgeInsets.all(screenHeight * 0.02),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(screenHeight * 0.03),
@@ -128,33 +130,32 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: Column(
                     children: [
+                      SizedBox(
+                        height: 10.h,
+                      ),
                       Container(
-                        height: screenHeight * 0.1,
+                        height: 70.h,
                         child: Padding(
-                          padding: EdgeInsets.all(screenHeight * 0.015),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.w, vertical: 0.w),
                           child: TextField(
                             decoration: InputDecoration(
                               hintText: 'Email',
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.circular(screenHeight * 0.02),
-                              ),
+                              border: OutlineInputBorder(),
                             ),
                           ),
                         ),
                       ),
                       Visibility(
                         child: Container(
-                          height: screenHeight * 0.1,
+                          height: 100.h,
                           child: Padding(
-                            padding: EdgeInsets.all(screenHeight * 0.015),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20.w, vertical: 20.w),
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: 'Password',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      screenHeight * 0.02),
-                                ),
+                                border: OutlineInputBorder(),
                               ),
                             ),
                           ),
@@ -177,8 +178,8 @@ class _LoginPageState extends State<LoginPage> {
                                       child: SingleChildScrollView(
                                         // Wrap content with SingleChildScrollView
                                         child: Container(
-                                          padding: EdgeInsets.all(
-                                              screenHeight * 0.02),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 30.w, vertical: 30.h),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.stretch,
@@ -186,8 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                                               Text(
                                                 'Forgot Password?',
                                                 style: TextStyle(
-                                                  fontSize:
-                                                      screenHeight * 0.025,
+                                                  fontSize: 17.sp,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -333,20 +333,23 @@ class _LoginPageState extends State<LoginPage> {
                             },
                           );
                         },
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: screenHeight * 0.018,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 17.sp,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      SizedBox(height: 30.h),
                       SizedBox(
-                        width: screenWidth * 0.4,
+                        width: 150.w,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -359,8 +362,7 @@ class _LoginPageState extends State<LoginPage> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                                vertical: screenHeight * 0.02),
+                            padding: EdgeInsets.symmetric(vertical: 15.h),
                             shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.circular(screenHeight * 0.03),
@@ -368,7 +370,10 @@ class _LoginPageState extends State<LoginPage> {
                             backgroundColor: Colors.orange,
                             foregroundColor: Colors.white,
                           ),
-                          child: const Text('Login'),
+                          child: Text(
+                            'Login',
+                            style: TextStyle(fontSize: 17.sp),
+                          ),
                         ),
                       ),
                     ],
@@ -376,7 +381,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Positioned(
-                bottom: screenHeight * 0.05,
+                bottom: 30.h,
                 left: 0,
                 right: 0,
                 child: Row(
@@ -397,7 +402,7 @@ class _LoginPageState extends State<LoginPage> {
                         "Don't have an account? Register",
                         style: TextStyle(
                           color: Colors.blue,
-                          fontSize: screenHeight * 0.018,
+                          fontSize: 17.sp,
                         ),
                       ),
                     ),

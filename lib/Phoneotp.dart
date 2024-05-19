@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_ev/LoginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Phoneotp extends StatefulWidget {
   const Phoneotp({Key? key}) : super(key: key);
@@ -13,6 +14,8 @@ class Phoneotp extends StatefulWidget {
 
 class _PhoneotpState extends State<Phoneotp> {
   String _phoneNumber = '';
+  String _selectedCountryCode = '+91'; // Default country code
+  bool _otpGenerated = false;
 
   List<TextEditingController> controllers = [
     TextEditingController(),
@@ -22,8 +25,6 @@ class _PhoneotpState extends State<Phoneotp> {
   ];
 
   String _enteredOTP = '';
-  String _selectedCountryCode = '+1'; // Default country code
-  bool _otpGenerated = false;
 
   Future<void> _generateOTP() async {
     // Generate OTP logic here
@@ -82,7 +83,6 @@ class _PhoneotpState extends State<Phoneotp> {
     );
   }
 
-
   void _showSuccessDialog() {
     showDialog(
       context: context,
@@ -104,7 +104,7 @@ class _PhoneotpState extends State<Phoneotp> {
   Widget buildTextField(int index) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        padding: EdgeInsets.symmetric(horizontal: 4.h),
         child: TextField(
           controller: controllers[index],
           textAlign: TextAlign.center,
@@ -141,16 +141,17 @@ class _PhoneotpState extends State<Phoneotp> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
+        foregroundColor: Colors.white,
         title: Text(
-          'Phone OTP Verification',
+          'OTP Verification',
           style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20.sp),
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.05),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,9 +169,7 @@ class _PhoneotpState extends State<Phoneotp> {
                     });
                   },
                   items: [
-                    '+91',
-                    '+7',
-                    '+20',
+                    "+91"
                     // Add other country codes as needed
                   ].map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -179,7 +178,7 @@ class _PhoneotpState extends State<Phoneotp> {
                     );
                   }).toList(),
                 ),
-                SizedBox(width: screenWidth * 0.02),
+                SizedBox(width: 10.w),
                 Expanded(
                   child: TextField(
                     keyboardType: TextInputType.phone,
@@ -187,7 +186,8 @@ class _PhoneotpState extends State<Phoneotp> {
                     decoration: InputDecoration(
                       labelText: 'Phone Number',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(screenHeight * 0.02),
+                        borderRadius:
+                            BorderRadius.circular(screenHeight * 0.02),
                       ),
                     ),
                     onChanged: (value) {
@@ -199,7 +199,7 @@ class _PhoneotpState extends State<Phoneotp> {
                 ),
               ],
             ),
-            SizedBox(height: screenHeight * 0.05),
+            SizedBox(height: 10.h),
             if (_otpGenerated)
               Row(
                 children: [
@@ -209,7 +209,7 @@ class _PhoneotpState extends State<Phoneotp> {
                   buildTextField(3),
                 ],
               ),
-            SizedBox(height: screenHeight * 0.03),
+            SizedBox(height: 10.h),
             ElevatedButton(
               onPressed: () async {
                 await _generateOTP();
@@ -218,7 +218,7 @@ class _PhoneotpState extends State<Phoneotp> {
                 'Generate OTP',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: screenHeight * 0.025,
+                  fontSize: 17.sp,
                 ),
               ),
               style: ElevatedButton.styleFrom(
@@ -231,23 +231,16 @@ class _PhoneotpState extends State<Phoneotp> {
             ElevatedButton(
               onPressed: () async {
                 final savedOTP = await _getSavedOTPFromPreferences();
-
-                _enteredOTP = controllers[0].text +
-          controllers[1].text +
-          controllers[2].text +
-          controllers[3].text;
-      _otpGenerated = true;
                 if (_enteredOTP == savedOTP) {
-                  
                   Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return LoginPage();
-                                },
-                              ),
-                            );
-                            _showSuccessDialog();
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return LoginPage();
+                      },
+                    ),
+                  );
+                  _showSuccessDialog();
                 } else {
                   // Handle incorrect OTP
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -260,7 +253,7 @@ class _PhoneotpState extends State<Phoneotp> {
                 'Verify OTP',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: screenHeight * 0.025,
+                  fontSize: 17.sp,
                 ),
               ),
               style: ElevatedButton.styleFrom(

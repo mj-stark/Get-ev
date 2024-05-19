@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_ev/Phoneotp.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignupPage extends StatelessWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -13,12 +14,13 @@ class SignupPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
+        foregroundColor: Colors.white,
         title: Text(
           'Sign Up',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: screenHeight * 0.025, // Responsive font size
+            fontSize: 20.sp, // Responsive font size
           ),
           textAlign: TextAlign.center,
         ),
@@ -31,11 +33,13 @@ class SignupPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.all(screenHeight * 0.02), // Responsive padding
+                padding: EdgeInsets.symmetric(
+                    horizontal: 20.w, vertical: 20.h), // Responsive padding
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
+                      heightFactor: 1.h,
                       child: TextField(
                         decoration: InputDecoration(
                           labelText: 'Full Name',
@@ -43,8 +47,9 @@ class SignupPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.025),
+                    SizedBox(height: 20.h),
                     Center(
+                      heightFactor: 1.h,
                       child: TextField(
                         decoration: InputDecoration(
                           labelText: 'Email ID',
@@ -52,8 +57,9 @@ class SignupPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.025),
+                    SizedBox(height: 20.h),
                     Center(
+                      heightFactor: 1.h,
                       child: TextField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -62,8 +68,9 @@ class SignupPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.025),
+                    SizedBox(height: 20.h),
                     Center(
+                      heightFactor: 1.h,
                       child: TextField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -72,11 +79,11 @@ class SignupPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.025),
+                    SizedBox(height: 20.h),
                     Center(
                       child: Container(
-                        height: screenHeight * 0.06,
-                        width: screenWidth * 0.4,
+                        height: 50.h,
+                        width: 150.w,
                         child: ElevatedButton.icon(
                           onPressed: () {
                             Navigator.push(
@@ -93,12 +100,13 @@ class SignupPage extends StatelessWidget {
                             'Next',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: screenHeight * 0.018, // Responsive font size
+                              fontSize: 19.sp, // Responsive font size
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(screenHeight * 0.03),
+                              borderRadius:
+                                  BorderRadius.circular(screenHeight * 0.03),
                             ),
                             backgroundColor: Colors.orange,
                             foregroundColor: Colors.white,

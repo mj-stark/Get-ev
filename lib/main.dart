@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:get_ev/LoginPage.dart';
 import 'package:get_ev/Signup.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,9 +12,12 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My App',
-      home: MainApp(),
+    return ScreenUtilInit(
+      designSize: const Size(412, 868),
+      builder: (context, _) => MaterialApp(
+        title: 'My App',
+        home: MainApp(),
+      ),
     );
   }
 }
@@ -35,21 +39,21 @@ class _MainAppState extends State<MainApp> {
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(screenHeight * 0.02),
+        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 alignment: Alignment.topCenter,
-                height: screenHeight * 0.25,
-                width: screenWidth,
+                height: 220.h,
+                width: 200.w,
                 child: Image.asset(
                   "assets/images/logo.png",
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: screenHeight * 0.01),
+              SizedBox(height: 10.h),
               CarouselSlider(
                 options: CarouselOptions(
                   aspectRatio: 1.0,
@@ -72,8 +76,8 @@ class _MainAppState extends State<MainApp> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            height: screenHeight * 0.2,
-                            width: screenWidth * 0.5,
+                            height: 200.h,
+                            width: 200.w,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
@@ -86,7 +90,7 @@ class _MainAppState extends State<MainApp> {
                               ),
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: 10.h),
                           Text(
                             text,
                             textAlign: TextAlign.center,
@@ -103,7 +107,7 @@ class _MainAppState extends State<MainApp> {
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: screenHeight * 0.02,
+                              fontSize: 16.sp,
                               color: Colors.grey,
                             ),
                           ),
@@ -123,10 +127,10 @@ class _MainAppState extends State<MainApp> {
                   activeSize: Size(12, 12),
                 ),
               ),
-              SizedBox(height: screenHeight * 0.08),
+              SizedBox(height: 80.h),
               Container(
-                height: screenHeight * 0.06,
-                width: screenWidth * 0.7,
+                height: 55.h,
+                width: 270.w,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(screenHeight * 0.03),
                   boxShadow: [
@@ -158,14 +162,14 @@ class _MainAppState extends State<MainApp> {
                   ),
                   child: Text(
                     "Get started",
-                    style: TextStyle(fontSize: screenHeight * 0.018),
+                    style: TextStyle(fontSize: 17.sp),
                   ),
                 ),
               ),
-              SizedBox(height: screenHeight * 0.01),
+              SizedBox(height: 10.h),
               Container(
-                height: screenHeight * 0.06,
-                width: screenWidth * 0.7,
+                height: 55.h,
+                width: 270.w,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(screenHeight * 0.03),
                   boxShadow: [
@@ -196,11 +200,12 @@ class _MainAppState extends State<MainApp> {
                     ),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(screenHeight * 0.015),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                     child: Text(
                       "Sign in",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: screenHeight * 0.018),
+                      style: TextStyle(fontSize: 17.sp),
                     ),
                   ),
                 ),
