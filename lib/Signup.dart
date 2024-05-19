@@ -10,7 +10,11 @@ class SignupPage extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
+    ScreenUtil.init(
+      context,
+      designSize: Size(412, 868),
+      minTextAdapt: true,
+    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
@@ -48,8 +52,8 @@ class SignupPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    Center(
-                      heightFactor: 1.h,
+                    const Center(
+                      heightFactor: 1,
                       child: TextField(
                         decoration: InputDecoration(
                           labelText: 'Email ID',
@@ -59,7 +63,7 @@ class SignupPage extends StatelessWidget {
                     ),
                     SizedBox(height: 20.h),
                     Center(
-                      heightFactor: 1.h,
+                      heightFactor: 1,
                       child: TextField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -70,7 +74,7 @@ class SignupPage extends StatelessWidget {
                     ),
                     SizedBox(height: 20.h),
                     Center(
-                      heightFactor: 1.h,
+                      heightFactor: 1,
                       child: TextField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -100,7 +104,7 @@ class SignupPage extends StatelessWidget {
                             'Next',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 19.sp, // Responsive font size
+                              fontSize: 15.sp, // Responsive font size
                             ),
                           ),
                           style: ElevatedButton.styleFrom(

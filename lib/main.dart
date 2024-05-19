@@ -14,6 +14,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(412, 868),
+      minTextAdapt: true,
+      splitScreenMode: true,
       builder: (context, _) => MaterialApp(
         title: 'My App',
         home: MainApp(),
@@ -46,14 +48,13 @@ class _MainAppState extends State<MainApp> {
             children: [
               Container(
                 alignment: Alignment.topCenter,
-                height: 220.h,
+                height: 200.h,
                 width: 200.w,
                 child: Image.asset(
                   "assets/images/logo.png",
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: 10.h),
               CarouselSlider(
                 options: CarouselOptions(
                   aspectRatio: 1.0,
@@ -95,7 +96,7 @@ class _MainAppState extends State<MainApp> {
                             text,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: screenHeight * 0.03,
+                              fontSize: 17.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -197,16 +198,13 @@ class _MainAppState extends State<MainApp> {
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(screenHeight * 0.03),
+                      
                     ),
                   ),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-                    child: Text(
-                      "Sign in",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 17.sp),
-                    ),
+                  child: Text(
+                    "Sign in",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 17.sp),
                   ),
                 ),
               ),

@@ -85,7 +85,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
+    ScreenUtil.init(context,
+        minTextAdapt: true, designSize: const Size(412, 868));
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
@@ -128,255 +129,267 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      Container(
-                        height: 70.h,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20.w, vertical: 0.w),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Email',
-                              border: OutlineInputBorder(),
-                            ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Email',
+                            border: OutlineInputBorder(),
                           ),
                         ),
-                      ),
-                      Visibility(
-                        child: Container(
-                          height: 100.h,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20.w, vertical: 20.w),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Password',
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Password',
+                            border: OutlineInputBorder(),
                           ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (BuildContext context) {
-                              return StatefulBuilder(
-                                builder: (BuildContext context,
-                                    StateSetter setState) {
-                                  return Padding(
-                                      padding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom),
-                                      child: SingleChildScrollView(
-                                        // Wrap content with SingleChildScrollView
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 30.w, vertical: 30.h),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              Text(
-                                                'Forgot Password?',
-                                                style: TextStyle(
-                                                  fontSize: 17.sp,
-                                                  fontWeight: FontWeight.bold,
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(
+                                  builder: (BuildContext context,
+                                      StateSetter setState) {
+                                    return Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom),
+                                        child: SingleChildScrollView(
+                                          // Wrap content with SingleChildScrollView
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 30.w,
+                                                vertical: 30.h),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.stretch,
+                                              children: [
+                                                Text(
+                                                  'Forgot Password?',
+                                                  style: TextStyle(
+                                                    fontSize: 17.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ),
-                                              const SizedBox(height: 16),
-                                              const Text(
-                                                'Enter your email or phone number to reset your password',
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              Visibility(
-                                                visible: _phoneNumber1,
-                                                child: Column(
-                                                  children: [
-                                                    const SizedBox(height: 16),
-                                                    TextField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        labelText:
-                                                            'Email or Phone Number',
-                                                        border:
-                                                            OutlineInputBorder(),
-                                                      ),
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          _phoneNumber = value;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const SizedBox(height: 16),
-                                                    ElevatedButton(
-                                                      onPressed: () async {
-                                                        setState(() {
-                                                          _isProcessing = true;
-                                                          _showOTPInput = true;
-                                                        });
-                                                        await _generateOTP();
-                                                        setState(() {
-                                                          _phoneNumber1 = false;
-                                                          _showOTPInput = true;
-                                                          _isProcessing = false;
-                                                        });
-                                                      },
-                                                      child: const Text(
-                                                          'Send OTP'),
-                                                    ),
-                                                  ],
+                                                const SizedBox(height: 16),
+                                                const Text(
+                                                  'Enter your email or phone number to reset your password',
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                              ),
-                                              Visibility(
-                                                visible: _showOTPInput,
-                                                child: Column(
-                                                  children: [
-                                                    const SizedBox(height: 16),
-                                                    TextField(
-                                                      controller:
-                                                          _otpController,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        labelText: 'Enter OTP',
-                                                        border:
-                                                            OutlineInputBorder(),
+                                                Visibility(
+                                                  visible: _phoneNumber1,
+                                                  child: Column(
+                                                    children: [
+                                                      const SizedBox(
+                                                          height: 16),
+                                                      TextField(
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          labelText:
+                                                              'Email or Phone Number',
+                                                          border:
+                                                              OutlineInputBorder(),
+                                                        ),
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            _phoneNumber =
+                                                                value;
+                                                          });
+                                                        },
                                                       ),
-                                                      keyboardType:
-                                                          TextInputType.number,
-                                                    ),
-                                                    const SizedBox(height: 16),
-                                                    ElevatedButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _otpVerified = true;
-                                                          _isProcessing = true;
-                                                        });
-                                                        _verifyOTP();
-                                                        setState(() {
-                                                          _showOTPInput = false;
-                                                          _otpVerified = true;
-                                                          _isProcessing = false;
-                                                        });
-                                                      },
-                                                      child: const Text(
-                                                          'Verify OTP'),
-                                                    ),
-                                                  ],
+                                                      const SizedBox(
+                                                          height: 16),
+                                                      ElevatedButton(
+                                                        onPressed: () async {
+                                                          setState(() {
+                                                            _isProcessing =
+                                                                true;
+                                                            _showOTPInput =
+                                                                true;
+                                                          });
+                                                          await _generateOTP();
+                                                          setState(() {
+                                                            _phoneNumber1 =
+                                                                false;
+                                                            _showOTPInput =
+                                                                true;
+                                                            _isProcessing =
+                                                                false;
+                                                          });
+                                                        },
+                                                        child: const Text(
+                                                            'Send OTP'),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                              Visibility(
-                                                visible: _otpVerified,
-                                                child: Column(
-                                                  children: [
-                                                    const SizedBox(height: 16),
-                                                    TextField(
-                                                      controller:
-                                                          _passwordController,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        labelText:
-                                                            'New Password',
-                                                        border:
-                                                            OutlineInputBorder(),
+                                                Visibility(
+                                                  visible: _showOTPInput,
+                                                  child: Column(
+                                                    children: [
+                                                      const SizedBox(
+                                                          height: 16),
+                                                      TextField(
+                                                        controller:
+                                                            _otpController,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          labelText:
+                                                              'Enter OTP',
+                                                          border:
+                                                              OutlineInputBorder(),
+                                                        ),
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
                                                       ),
-                                                      obscureText: true,
-                                                    ),
-                                                    const SizedBox(height: 16),
-                                                    TextField(
-                                                      controller:
-                                                          _confirmPasswordController,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        labelText:
-                                                            'Confirm Password',
-                                                        border:
-                                                            OutlineInputBorder(),
+                                                      const SizedBox(
+                                                          height: 16),
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            _otpVerified = true;
+                                                            _isProcessing =
+                                                                true;
+                                                          });
+                                                          _verifyOTP();
+                                                          setState(() {
+                                                            _showOTPInput =
+                                                                false;
+                                                            _otpVerified = true;
+                                                            _isProcessing =
+                                                                false;
+                                                          });
+                                                        },
+                                                        child: const Text(
+                                                            'Verify OTP'),
                                                       ),
-                                                      obscureText: true,
-                                                    ),
-                                                    const SizedBox(height: 16),
-                                                    ElevatedButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _otpVerified = true;
-                                                          _changePassword();
-                                                          Navigator.pop(
-                                                              context);
-                                                          _isProcessing = true;
-                                                        });
+                                                    ],
+                                                  ),
+                                                ),
+                                                Visibility(
+                                                  visible: _otpVerified,
+                                                  child: Column(
+                                                    children: [
+                                                      const SizedBox(
+                                                          height: 16),
+                                                      TextField(
+                                                        controller:
+                                                            _passwordController,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          labelText:
+                                                              'New Password',
+                                                          border:
+                                                              OutlineInputBorder(),
+                                                        ),
+                                                        obscureText: true,
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 16),
+                                                      TextField(
+                                                        controller:
+                                                            _confirmPasswordController,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          labelText:
+                                                              'Confirm Password',
+                                                          border:
+                                                              OutlineInputBorder(),
+                                                        ),
+                                                        obscureText: true,
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 16),
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            _otpVerified = true;
+                                                            _changePassword();
+                                                            Navigator.pop(
+                                                                context);
+                                                            _isProcessing =
+                                                                true;
+                                                          });
 
-                                                        setState(() {
-                                                          _isProcessing = false;
-                                                        });
-                                                        // Close the modal
-                                                      },
-                                                      child: const Text(
-                                                          'Change Password'),
-                                                    ),
-                                                  ],
+                                                          setState(() {
+                                                            _isProcessing =
+                                                                false;
+                                                          });
+                                                          // Close the modal
+                                                        },
+                                                        child: const Text(
+                                                            'Change Password'),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ));
-                                },
-                              );
-                            },
-                          );
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 17.sp,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 30.h),
-                      SizedBox(
-                        width: 150.w,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return const FrontPage();
-                                },
-                              ),
+                                        ));
+                                  },
+                                );
+                              },
                             );
                           },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 15.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(screenHeight * 0.03),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 0.w, vertical: 5.h),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'Forgot Password?',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
                             ),
-                            backgroundColor: Colors.orange,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: Text(
-                            'Login',
-                            style: TextStyle(fontSize: 17.sp),
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 30.h),
+                        SizedBox(
+                          width: 150.w,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return const FrontPage();
+                                  },
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 15.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(screenHeight * 0.03),
+                              ),
+                              backgroundColor: Colors.orange,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: Text(
+                              'Login',
+                              style: TextStyle(fontSize: 17.sp),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -402,7 +415,7 @@ class _LoginPageState extends State<LoginPage> {
                         "Don't have an account? Register",
                         style: TextStyle(
                           color: Colors.blue,
-                          fontSize: 17.sp,
+                          fontSize: 15.sp,
                         ),
                       ),
                     ),
