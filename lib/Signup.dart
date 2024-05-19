@@ -7,6 +7,9 @@ class SignupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
@@ -15,6 +18,7 @@ class SignupPage extends StatelessWidget {
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
+            fontSize: screenHeight * 0.025, // Responsive font size
           ),
           textAlign: TextAlign.center,
         ),
@@ -27,7 +31,7 @@ class SignupPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(screenHeight * 0.02), // Responsive padding
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -39,7 +43,7 @@ class SignupPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: screenHeight * 0.025),
                     Center(
                       child: TextField(
                         decoration: InputDecoration(
@@ -48,7 +52,7 @@ class SignupPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: screenHeight * 0.025),
                     Center(
                       child: TextField(
                         obscureText: true,
@@ -58,7 +62,7 @@ class SignupPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: screenHeight * 0.025),
                     Center(
                       child: TextField(
                         obscureText: true,
@@ -68,12 +72,11 @@ class SignupPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    
-                    SizedBox(height: 20),
+                    SizedBox(height: screenHeight * 0.025),
                     Center(
                       child: Container(
-                        height: 50,
-                        width: 150,
+                        height: screenHeight * 0.06,
+                        width: screenWidth * 0.4,
                         child: ElevatedButton.icon(
                           onPressed: () {
                             Navigator.push(
@@ -90,12 +93,12 @@ class SignupPage extends StatelessWidget {
                             'Next',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 20,
+                              fontSize: screenHeight * 0.018, // Responsive font size
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(screenHeight * 0.03),
                             ),
                             backgroundColor: Colors.orange,
                             foregroundColor: Colors.white,

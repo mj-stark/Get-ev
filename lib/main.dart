@@ -4,11 +4,8 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:get_ev/LoginPage.dart';
 import 'package:get_ev/Signup.dart';
 
-
 void main() {
-  
   runApp(MyApp());
-  
 }
 
 class MyApp extends StatelessWidget {
@@ -31,29 +28,28 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   int _currentIndex = 0; // Initialize _currentIndex
 
-  
-
-
   @override
   Widget build(BuildContext context) {
-   
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(screenHeight * 0.02),
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 alignment: Alignment.topCenter,
-                height: MediaQuery.of(context).size.height * 0.25,
-                width: MediaQuery.of(context).size.width,
+                height: screenHeight * 0.25,
+                width: screenWidth,
                 child: Image.asset(
                   "assets/images/logo.png",
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+              SizedBox(height: screenHeight * 0.01),
               CarouselSlider(
                 options: CarouselOptions(
                   aspectRatio: 1.0,
@@ -76,8 +72,8 @@ class _MainAppState extends State<MainApp> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.2,
-                            width: MediaQuery.of(context).size.width * 0.5,
+                            height: screenHeight * 0.2,
+                            width: screenWidth * 0.5,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
@@ -90,23 +86,24 @@ class _MainAppState extends State<MainApp> {
                               ),
                             ),
                           ),
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                          SizedBox(height: screenHeight * 0.02),
                           Text(
                             text,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: screenHeight * 0.03,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                          SizedBox(height: screenHeight * 0.01),
                           Text(
                             text.startsWith("All your")
                                 ? "A healthy lifestyle awaits you"
                                 : "Fast and convenient",
                             textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: screenHeight * 0.02,
                               color: Colors.grey,
                             ),
                           ),
@@ -126,12 +123,12 @@ class _MainAppState extends State<MainApp> {
                   activeSize: Size(12, 12),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+              SizedBox(height: screenHeight * 0.08),
               Container(
-                height: MediaQuery.of(context).size.height * 0.06,
-                width: 250,
+                height: screenHeight * 0.06,
+                width: screenWidth * 0.7,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(screenHeight * 0.03),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
@@ -145,7 +142,6 @@ class _MainAppState extends State<MainApp> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      
                       MaterialPageRoute(
                         builder: (context) {
                           return SignupPage();
@@ -157,21 +153,21 @@ class _MainAppState extends State<MainApp> {
                     backgroundColor: Colors.orange,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(screenHeight * 0.03),
                     ),
                   ),
                   child: Text(
                     "Get started",
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: screenHeight * 0.018),
                   ),
                 ),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: screenHeight * 0.01),
               Container(
-                height: 50,
-                width: 250,
+                height: screenHeight * 0.06,
+                width: screenWidth * 0.7,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
+                  borderRadius: BorderRadius.circular(screenHeight * 0.03),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
@@ -196,16 +192,15 @@ class _MainAppState extends State<MainApp> {
                     backgroundColor: Colors.indigo[700],
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(screenHeight * 0.03),
                     ),
                   ),
                   child: Padding(
-                    padding:
-                        EdgeInsets.all(8.0), // Adjust the padding as needed
+                    padding: EdgeInsets.all(screenHeight * 0.015),
                     child: Text(
+                      "Sign in",
                       textAlign: TextAlign.center,
-                      "Already Have an Account?",
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: screenHeight * 0.018),
                     ),
                   ),
                 ),

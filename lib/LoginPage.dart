@@ -82,42 +82,46 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height,
+          height: screenHeight,
           child: Stack(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.45,
+                height: screenHeight * 0.45,
                 child: Center(
                   child: Image.asset(
                     "assets/images/logo.png",
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: MediaQuery.of(context).size.height * 0.5,
+                    width: screenWidth * 0.5,
+                    height: screenHeight * 0.5,
                   ),
                 ),
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(screenHeight * 0.03)),
                   color: Colors.orange[300],
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.4,
-                left: MediaQuery.of(context).size.width * 0.07,
-                right: MediaQuery.of(context).size.width * 0.07,
+                top: screenHeight * 0.4,
+                left: screenWidth * 0.07,
+                right: screenWidth * 0.07,
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  padding: const EdgeInsets.all(20),
+                  width: screenWidth * 0.8,
+                  padding: EdgeInsets.all(screenHeight * 0.02),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(screenHeight * 0.03),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 10,
+                        spreadRadius: screenHeight * 0.01,
+                        blurRadius: screenHeight * 0.02,
                         offset: const Offset(2, 3),
                       ),
                     ],
@@ -125,14 +129,15 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       Container(
-                        height: 70,
+                        height: screenHeight * 0.1,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(screenHeight * 0.015),
                           child: TextField(
                             decoration: InputDecoration(
                               hintText: 'Email',
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius:
+                                    BorderRadius.circular(screenHeight * 0.02),
                               ),
                             ),
                           ),
@@ -140,14 +145,15 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Visibility(
                         child: Container(
-                          height: 70,
+                          height: screenHeight * 0.1,
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(screenHeight * 0.015),
                             child: TextField(
                               decoration: InputDecoration(
                                 hintText: 'Password',
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(
+                                      screenHeight * 0.02),
                                 ),
                               ),
                             ),
@@ -171,15 +177,17 @@ class _LoginPageState extends State<LoginPage> {
                                       child: SingleChildScrollView(
                                         // Wrap content with SingleChildScrollView
                                         child: Container(
-                                          padding: const EdgeInsets.all(16),
+                                          padding: EdgeInsets.all(
+                                              screenHeight * 0.02),
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.stretch,
                                             children: [
-                                              const Text(
+                                              Text(
                                                 'Forgot Password?',
                                                 style: TextStyle(
-                                                  fontSize: 20,
+                                                  fontSize:
+                                                      screenHeight * 0.025,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -221,7 +229,8 @@ class _LoginPageState extends State<LoginPage> {
                                                           _isProcessing = false;
                                                         });
                                                       },
-                                                      child: const Text('Send OTP'),
+                                                      child: const Text(
+                                                          'Send OTP'),
                                                     ),
                                                   ],
                                                 ),
@@ -257,7 +266,8 @@ class _LoginPageState extends State<LoginPage> {
                                                           _isProcessing = false;
                                                         });
                                                       },
-                                                      child: const Text('Verify OTP'),
+                                                      child: const Text(
+                                                          'Verify OTP'),
                                                     ),
                                                   ],
                                                 ),
@@ -323,19 +333,20 @@ class _LoginPageState extends State<LoginPage> {
                             },
                           );
                         },
-                        child: const Align(
+                        child: Align(
                           alignment: Alignment.centerRight,
                           child: Text(
                             'Forgot Password?',
                             style: TextStyle(
                               color: Colors.blue,
+                              fontSize: screenHeight * 0.018,
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 30),
                       SizedBox(
-                        width: 200,
+                        width: screenWidth * 0.4,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -348,9 +359,11 @@ class _LoginPageState extends State<LoginPage> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            padding: EdgeInsets.symmetric(
+                                vertical: screenHeight * 0.02),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius:
+                                  BorderRadius.circular(screenHeight * 0.03),
                             ),
                             backgroundColor: Colors.orange,
                             foregroundColor: Colors.white,
@@ -363,7 +376,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Positioned(
-                bottom: 20,
+                bottom: screenHeight * 0.05,
                 left: 0,
                 right: 0,
                 child: Row(
@@ -380,10 +393,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         );
                       },
-                      child: const Text(
+                      child: Text(
                         "Don't have an account? Register",
                         style: TextStyle(
                           color: Colors.blue,
+                          fontSize: screenHeight * 0.018,
                         ),
                       ),
                     ),

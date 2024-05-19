@@ -56,31 +56,31 @@ class _PhoneotpState extends State<Phoneotp> {
   }
 
   void _showOTPDialog() {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('OTP'),
-      content: FutureBuilder<String?>(
-        future: _getSavedOTPFromPreferences(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Show loading indicator while fetching OTP
-          } else {
-            return Text('Your OTP is ${snapshot.data ?? _enteredOTP}');
-          }
-        },
-      ),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('OTP'),
+        content: FutureBuilder<String?>(
+          future: _getSavedOTPFromPreferences(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(); // Show loading indicator while fetching OTP
+            } else {
+              return Text('Your OTP is ${snapshot.data ?? _enteredOTP}');
+            }
           },
-          child: Text('OK'),
         ),
-      ],
-    ),
-  );
-}
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
 
 
   void _showSuccessDialog() {
@@ -135,6 +135,9 @@ class _PhoneotpState extends State<Phoneotp> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange,
@@ -147,7 +150,7 @@ class _PhoneotpState extends State<Phoneotp> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(screenWidth * 0.05),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,8 +159,8 @@ class _PhoneotpState extends State<Phoneotp> {
               children: [
                 DropdownButton<String>(
                   alignment: Alignment.center,
-                  itemHeight: 70,
-                  menuMaxHeight: 70,
+                  itemHeight: screenHeight * 0.1,
+                  menuMaxHeight: screenHeight * 0.1,
                   value: _selectedCountryCode,
                   onChanged: (newValue) {
                     setState(() {
@@ -165,7 +168,7 @@ class _PhoneotpState extends State<Phoneotp> {
                     });
                   },
                   items: [
-                    '+1',
+                    '+91',
                     '+7',
                     '+20',
                     // Add other country codes as needed
@@ -176,7 +179,7 @@ class _PhoneotpState extends State<Phoneotp> {
                     );
                   }).toList(),
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: screenWidth * 0.02),
                 Expanded(
                   child: TextField(
                     keyboardType: TextInputType.phone,
@@ -184,7 +187,7 @@ class _PhoneotpState extends State<Phoneotp> {
                     decoration: InputDecoration(
                       labelText: 'Phone Number',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(screenHeight * 0.02),
                       ),
                     ),
                     onChanged: (value) {
@@ -196,7 +199,7 @@ class _PhoneotpState extends State<Phoneotp> {
                 ),
               ],
             ),
-            SizedBox(height: 40),
+            SizedBox(height: screenHeight * 0.05),
             if (_otpGenerated)
               Row(
                 children: [
@@ -206,7 +209,7 @@ class _PhoneotpState extends State<Phoneotp> {
                   buildTextField(3),
                 ],
               ),
-            SizedBox(height: 20),
+            SizedBox(height: screenHeight * 0.03),
             ElevatedButton(
               onPressed: () async {
                 await _generateOTP();
@@ -215,12 +218,13 @@ class _PhoneotpState extends State<Phoneotp> {
                 'Generate OTP',
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: screenHeight * 0.025,
                 ),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(screenHeight * 0.03),
                 ),
               ),
             ),
@@ -256,12 +260,13 @@ class _PhoneotpState extends State<Phoneotp> {
                 'Verify OTP',
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: screenHeight * 0.025,
                 ),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(screenHeight * 0.03),
                 ),
               ),
             ),
