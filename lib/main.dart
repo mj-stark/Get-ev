@@ -4,6 +4,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:get_ev/LoginPage.dart';
 import 'package:get_ev/Signup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_ev/FrontPage.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, _) => MaterialApp(
         title: 'My App',
-        home: MainApp(),
+        home: FrontPage(),
       ),
     );
   }

@@ -42,8 +42,8 @@ class SignupPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      heightFactor: 1.h,
+                    const Center(
+                      heightFactor: 1,
                       child: TextField(
                         decoration: InputDecoration(
                           labelText: 'Full Name',
