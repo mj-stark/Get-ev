@@ -30,13 +30,7 @@ class _PhoneotpState extends State<Phoneotp> {
     // Generate OTP logic here
     // For demo purposes, generating a random 4-digit OTP
     final String generatedOTP = _generateRandomOTP(4);
-    setState(() {
-      _enteredOTP = controllers[0].text +
-          controllers[1].text +
-          controllers[2].text +
-          controllers[3].text;
-      _otpGenerated = true;
-    });
+    
     await _saveOTPToPreferences(generatedOTP);
     _showOTPDialog();
   }
@@ -231,6 +225,13 @@ class _PhoneotpState extends State<Phoneotp> {
             ElevatedButton(
               onPressed: () async {
                 final savedOTP = await _getSavedOTPFromPreferences();
+                setState(() {
+      _enteredOTP = controllers[0].text +
+          controllers[1].text +
+          controllers[2].text +
+          controllers[3].text;
+      _otpGenerated = true;
+    });
                 if (_enteredOTP == savedOTP) {
                   Navigator.push(
                     context,
