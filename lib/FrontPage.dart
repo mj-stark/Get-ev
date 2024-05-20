@@ -38,10 +38,7 @@ class _FrontPageState extends State<FrontPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          
-        ),
+      home: Scaffold( 
         body: _getPage(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           unselectedItemColor: Colors.orange,
