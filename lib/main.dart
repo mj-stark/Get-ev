@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, _) => MaterialApp(
         title: 'My App',
-        home: MainApp(),
+        home: FrontPage(),
       ),
     );
   }
