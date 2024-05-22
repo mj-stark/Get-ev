@@ -1,94 +1,188 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:get_ev/CartPage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'WishlistPage.dart';
+import 'package:flutter/foundation.dart';
 
 class Product {
   final String name;
   final String imageUrl;
   final String description;
   final String Rate;
+  int quantity;
 
   Product(
       {required this.name,
       required this.imageUrl,
       required this.description,
-      required this.Rate});
+      required this.Rate,
+      this.quantity = 1,});
+}
+
+final cartItems = <Product>[];
+final cartCount = CartCount(0);
+
+class Wishlist extends ChangeNotifier {
+  List<Product> items = [];
+
+  void addToWishlist(Product product) {
+    items.add(product);
+    notifyListeners();
+  }
+}
+
+// Assuming this is your CartModel class
+class CartModel extends ChangeNotifier {
+  List<Product> items = [];
+
+  // Add product to cart or update quantity if already exists
+  void addToCart(Product product) {
+   
+bool productExists = false;
+for (var item in items) {
+  if (item.name == product.name) {
+    item.quantity++;
+    productExists = true;
+    break;
+  }
+}
+
+if (!productExists) {
+  items.add(product);
+}
+
+notifyListeners();
+
+  }
+
+    
+  
+
+  // Remove product from cart
+  void removeFromCart(Product product) {
+    items.remove(product);
+    notifyListeners();
+  }
+
+  // Clear the cart
+  void clearCart() {
+    items.clear();
+    notifyListeners();
+  }
+
+
+
+ 
+  // Calculate total bill
+  double getTotalBill() {
+    double total = 0.0;
+    for (var item in items) {
+      total += int.parse(item.Rate) * item.quantity;
+    }
+    return total;
+  }
+
+  // Update quantity of a product in the cart
+  void updateQuantity(Product product, int quantityChange) {
+    // Find the product in the cart
+    Product cartProduct = items.firstWhere((p) => p.name == product.name);
+    if (cartProduct != null) {
+      // Update the quantity
+      cartProduct.quantity += quantityChange;
+      // If the quantity is 0, remove the product from the cart
+      if (cartProduct.quantity <= 0) {
+        items.remove(cartProduct);
+      }
+      notifyListeners();
+    }
+  }
+}
+
+final wishlistItems = <Product>[];
+
+void addToCart(Product product, int quantity) {
+    cartItems.add(product);
+}
+
+void addToWishlist(Product product) {
+  wishlistItems.add(product);
 }
 
 class CartCount extends ValueNotifier<int> {
   CartCount(int value) : super(value);
 }
 
-
 class HomePage extends StatelessWidget {
   final List<Product> products = [
     Product(
         name: 'Product 1',
-        Rate: "500 rs",
+        Rate: "500",
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum libero nec tristique fermentum. Sed eget neque non ante fermentum ultricies. Cras nec justo a arcu pellentesque ultrices. Vivamus ultricies orci eu massa laoreet, nec convallis dolor faucibus. Donec nec convallis urna. Cras venenatis nunc nec diam fermentum, id mollis risus dapibus. Mauris nec purus nec libero feugiat elementum.',
         imageUrl:
             'https://eatanytime.in/cdn/shop/articles/close-up-healthy-nuts-wooden-background-generative-ai.jpg?v=1702453505&width=750'),
     Product(
         name: 'Product 2',
-        Rate: "1200 rs",
+        Rate: "1200",
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum libero nec tristique fermentum. Sed eget neque non ante fermentum ultricies. Cras nec justo a arcu pellentesque ultrices. Vivamus ultricies orci eu massa laoreet, nec convallis dolor faucibus. Donec nec convallis urna. Cras venenatis nunc nec diam fermentum, id mollis risus dapibus. Mauris nec purus nec libero feugiat elementum.',
         imageUrl:
             'https://eatanytime.in/cdn/shop/articles/close-up-healthy-nuts-wooden-background-generative-ai.jpg?v=1702453505&width=750'),
     Product(
         name: 'Product 3',
-        Rate: "1000 rs",
+        Rate: "1000",
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum libero nec tristique fermentum. Sed eget neque non ante fermentum ultricies. Cras nec justo a arcu pellentesque ultrices. Vivamus ultricies orci eu massa laoreet, nec convallis dolor faucibus. Donec nec convallis urna. Cras venenatis nunc nec diam fermentum, id mollis risus dapibus. Mauris nec purus nec libero feugiat elementum.',
         imageUrl:
             'https://eatanytime.in/cdn/shop/articles/close-up-healthy-nuts-wooden-background-generative-ai.jpg?v=1702453505&width=750'),
     Product(
         name: 'Product 4',
-        Rate: "2000 rs",
+        Rate: "2000",
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum libero nec tristique fermentum. Sed eget neque non ante fermentum ultricies. Cras nec justo a arcu pellentesque ultrices. Vivamus ultricies orci eu massa laoreet, nec convallis dolor faucibus. Donec nec convallis urna. Cras venenatis nunc nec diam fermentum, id mollis risus dapibus. Mauris nec purus nec libero feugiat elementum.',
         imageUrl:
             'https://eatanytime.in/cdn/shop/articles/close-up-healthy-nuts-wooden-background-generative-ai.jpg?v=1702453505&width=750'),
     Product(
         name: 'Product 5',
-        Rate: "1500 rs",
+        Rate: "1500",
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum libero nec tristique fermentum. Sed eget neque non ante fermentum ultricies. Cras nec justo a arcu pellentesque ultrices. Vivamus ultricies orci eu massa laoreet, nec convallis dolor faucibus. Donec nec convallis urna. Cras venenatis nunc nec diam fermentum, id mollis risus dapibus. Mauris nec purus nec libero feugiat elementum.',
         imageUrl:
             'https://eatanytime.in/cdn/shop/articles/close-up-healthy-nuts-wooden-background-generative-ai.jpg?v=1702453505&width=750'),
     Product(
         name: 'Product 6',
-        Rate: "200 rs",
+        Rate: "200",
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum libero nec tristique fermentum. Sed eget neque non ante fermentum ultricies. Cras nec justo a arcu pellentesque ultrices. Vivamus ultricies orci eu massa laoreet, nec convallis dolor faucibus. Donec nec convallis urna. Cras venenatis nunc nec diam fermentum, id mollis risus dapibus. Mauris nec purus nec libero feugiat elementum.',
         imageUrl:
             'https://eatanytime.in/cdn/shop/articles/close-up-healthy-nuts-wooden-background-generative-ai.jpg?v=1702453505&width=750'),
     Product(
         name: 'Product 7',
-        Rate: "300 rs",
+        Rate: "300",
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum libero nec tristique fermentum. Sed eget neque non ante fermentum ultricies. Cras nec justo a arcu pellentesque ultrices. Vivamus ultricies orci eu massa laoreet, nec convallis dolor faucibus. Donec nec convallis urna. Cras venenatis nunc nec diam fermentum, id mollis risus dapibus. Mauris nec purus nec libero feugiat elementum.',
         imageUrl:
             'https://eatanytime.in/cdn/shop/articles/close-up-healthy-nuts-wooden-background-generative-ai.jpg?v=1702453505&width=750'),
     Product(
         name: 'Product 8',
-        Rate: "600 rs",
+        Rate: "600",
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum libero nec tristique fermentum. Sed eget neque non ante fermentum ultricies. Cras nec justo a arcu pellentesque ultrices. Vivamus ultricies orci eu massa laoreet, nec convallis dolor faucibus. Donec nec convallis urna. Cras venenatis nunc nec diam fermentum, id mollis risus dapibus. Mauris nec purus nec libero feugiat elementum.',
         imageUrl:
             'https://eatanytime.in/cdn/shop/articles/close-up-healthy-nuts-wooden-background-generative-ai.jpg?v=1702453505&width=750'),
     Product(
         name: 'Product 9',
-        Rate: "500 rs",
+        Rate: "500",
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum libero nec tristique fermentum. Sed eget neque non ante fermentum ultricies. Cras nec justo a arcu pellentesque ultrices. Vivamus ultricies orci eu massa laoreet, nec convallis dolor faucibus. Donec nec convallis urna. Cras venenatis nunc nec diam fermentum, id mollis risus dapibus. Mauris nec purus nec libero feugiat elementum.',
         imageUrl:
             'https://eatanytime.in/cdn/shop/articles/close-up-healthy-nuts-wooden-background-generative-ai.jpg?v=1702453505&width=750'),
     Product(
         name: 'Product 10',
-        Rate: "700 rs",
+        Rate: "700",
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum libero nec tristique fermentum. Sed eget neque non ante fermentum ultricies. Cras nec justo a arcu pellentesque ultrices. Vivamus ultricies orci eu massa laoreet, nec convallis dolor faucibus. Donec nec convallis urna. Cras venenatis nunc nec diam fermentum, id mollis risus dapibus. Mauris nec purus nec libero feugiat elementum.',
         imageUrl:
@@ -128,51 +222,57 @@ class HomePage extends StatelessWidget {
                     radius: 30.r,
                   ),
                   Stack(
-  children: [
-    Container(
-        // Your widget tree here
-        child: ValueListenableBuilder<int>(
-          valueListenable: cartCount,
-          builder: (context, value, child) {
-            return Stack(
-              children: [
-                IconButton(
-                  iconSize: 25,
-                  icon: Icon(Icons.shopping_cart),
-                  onPressed: () {
-                    // Implement cart icon functionality
-                  },
-                ),
-                Positioned(
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    constraints: BoxConstraints(
-                      minWidth: 16,
-                      minHeight: 16,
-                    ),
-                    child: Text(
-                      '$value', // Use the current cart count value
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
+                    children: [
+                      Container(
+                        // Your widget tree here
+                        child: ValueListenableBuilder<int>(
+                          valueListenable: cartCount,
+                          builder: (context, value, child) {
+                            return Stack(
+                              children: [
+                                IconButton(
+                                  iconSize: 25,
+                                  icon: Icon(Icons.shopping_cart),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return CartPage();
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  child: Container(
+                                    padding: EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    constraints: BoxConstraints(
+                                      minWidth: 16,
+                                      minHeight: 16,
+                                    ),
+                                    child: Text(
+                                      '$value', // Use the current cart count value
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+                    ],
                   ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-  ],
-),
-
                 ],
               ),
             ),
@@ -252,7 +352,8 @@ class HomePage extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: products.length,
                 itemBuilder: (context, index) {
-                  return _buildProductItem(products[index], quantity);
+                  return _buildProductItem(
+                      products[index], quantity, addToCart);
                 },
               ),
             ),
@@ -266,7 +367,8 @@ class HomePage extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: products.length,
                 itemBuilder: (context, index) {
-                  return _buildProductItem(products[index], quantity);
+                  return _buildProductItem(
+                      products[index], quantity, addToCart);
                 },
               ),
             ),
@@ -319,9 +421,7 @@ class HomePage extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: () {
-        // Navigate to category page
-      },
+      onTap: () {},
       child: Card(
         elevation: 3,
         child: Column(
@@ -337,7 +437,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-Widget _buildProductItem(Product product, int quantity) {
+Widget _buildProductItem(Product product, int quantity, Function addToCart) {
   return StatefulBuilder(
     builder: (context, setState) {
       void incrementQuantity() {
@@ -389,6 +489,28 @@ Widget _buildProductItem(Product product, int quantity) {
                             fontWeight: FontWeight.bold,
                             fontFamily: GoogleFonts.montserrat().fontFamily),
                       ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            addToCart(product, quantity);
+                            Provider.of<CartModel>(context, listen: false)
+                                .addToCart(
+                              Product(
+                                  name: product.name,
+                                  Rate: product.Rate,
+                                  description: product.description,
+                                  imageUrl: product.imageUrl),
+                            );
+                            setState(() {});
+                            Navigator.pop(context);
+                          },
+                          child: Text('Add to Cart'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -460,6 +582,16 @@ Widget _buildProductItem(Product product, int quantity) {
                                   child: GestureDetector(
                                     onTap: () {
                                       incrementQuantity();
+                                      Provider.of<CartModel>(context,
+                                              listen: false)
+                                          .addToCart(
+                                        Product(
+                                            name: product.name,
+                                            Rate: product.Rate,
+                                            description: product.description,
+                                            imageUrl: product.imageUrl),
+                                      );
+                                      setState(() {});
                                     },
                                     child: Icon(Icons.add_circle_outline_sharp),
                                   ),
@@ -496,15 +628,24 @@ Widget _buildProductItem(Product product, int quantity) {
                 ),
               ),
               Positioned(
-                width: 20,
+                width: 20.w,
                 top: 5.h,
                 right: 20.w,
                 child: IconButton(
                   icon: Icon(
-                    Icons.favorite_outline,
+                    Icons.favorite_border_sharp,
                     color: Colors.white,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Provider.of<Wishlist>(context, listen: false).addToWishlist(
+                      Product(
+                          name: product.name,
+                          Rate: product.Rate,
+                          description: product.description,
+                          imageUrl: product.imageUrl),
+                    );
+                    setState(() {}); // Trigger a rebuild of the WishlistPage
+                  },
                 ),
               ),
             ],

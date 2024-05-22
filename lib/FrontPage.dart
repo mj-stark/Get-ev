@@ -28,6 +28,7 @@ class _FrontPageState extends State<FrontPage> {
         return StorePage();
       case 2:
         return WishlistPage();
+
       case 3:
         return ProfilePage();
       default:

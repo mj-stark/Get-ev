@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:get_ev/FrontPage.dart';
+import 'package:get_ev/HomePage.dart';
+import 'package:provider/provider.dart';
 import 'package:get_ev/LoginPage.dart';
 import 'package:get_ev/Signup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get_ev/FrontPage.dart';
+import 'package:get_ev/CartPage.dart';
+
+
 
 void main() {
   runApp(MyApp());
@@ -13,7 +18,15 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
+    return 
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Wishlist()),
+        ChangeNotifierProvider(create: (_) => CartModel()),
+         
+      ],child: 
+    
+    ScreenUtilInit(
       designSize: const Size(412, 868),
       minTextAdapt: true,
       splitScreenMode: true,
@@ -21,6 +34,7 @@ class MyApp extends StatelessWidget {
         title: 'My App',
         home: FrontPage(),
       ),
+    )
     );
   }
 }
