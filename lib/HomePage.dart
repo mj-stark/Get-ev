@@ -4,7 +4,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get_ev/CartPage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
+import 'WishlistPage.dart';
+import 'package:flutter/foundation.dart';
 
 class Product {
   final String name;
@@ -13,12 +14,13 @@ class Product {
   final String Rate;
   int quantity;
 
-  Product(
-      {required this.name,
-      required this.imageUrl,
-      required this.description,
-      required this.Rate,
-      this.quantity = 1,});
+  Product({
+    required this.name,
+    required this.imageUrl,
+    required this.description,
+    required this.Rate,
+    this.quantity = 1,
+  });
 }
 
 final cartItems = <Product>[];
@@ -39,26 +41,21 @@ class CartModel extends ChangeNotifier {
 
   // Add product to cart or update quantity if already exists
   void addToCart(Product product) {
-   
-bool productExists = false;
-for (var item in items) {
-  if (item.name == product.name) {
-    item.quantity++;
-    productExists = true;
-    break;
+    bool productExists = false;
+    for (var item in items) {
+      if (item.name == product.name) {
+        item.quantity++;
+        productExists = true;
+        break;
+      }
+    }
+
+    if (!productExists) {
+      items.add(product);
+    }
+
+    notifyListeners();
   }
-}
-
-if (!productExists) {
-  items.add(product);
-}
-
-notifyListeners();
-
-  }
-
-    
-  
 
   // Remove product from cart
   void removeFromCart(Product product) {
@@ -66,15 +63,21 @@ notifyListeners();
     notifyListeners();
   }
 
+
+
+int getTotalQuantity() {
+    int total = 0;
+    for (var item in items) {
+      total += item.quantity;
+    }
+    return total;
+  }
   // Clear the cart
   void clearCart() {
     items.clear();
     notifyListeners();
   }
 
-
-
- 
   // Calculate total bill
   double getTotalBill() {
     double total = 0.0;
@@ -103,8 +106,10 @@ notifyListeners();
 final wishlistItems = <Product>[];
 
 void addToCart(Product product, int quantity) {
-    cartItems.add(product);
+  cartItems.add(product);
 }
+
+
 
 void addToWishlist(Product product) {
   wishlistItems.add(product);
@@ -192,6 +197,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final CartCount cartCount = CartCount(0);
     int quantity = 0;
+    int totalQuantity = Provider.of<CartModel>(context).getTotalQuantity();
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -251,13 +257,13 @@ class HomePage extends StatelessWidget {
                                       color: Colors.red,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    constraints: BoxConstraints(
+                                    constraints: const BoxConstraints(
                                       minWidth: 16,
                                       minHeight: 16,
                                     ),
                                     child: Text(
-                                      '$value', // Use the current cart count value
-                                      style: TextStyle(
+                                      "$totalQuantity", // Use the current cart count value
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
                                       ),
@@ -571,7 +577,7 @@ Widget _buildProductItem(Product product, int quantity, Function addToCart) {
                             padding: EdgeInsets.symmetric(horizontal: 5.w),
                             child: Row(
                               children: [
-                                Text( "₹ " + product.Rate),
+                                Text(product.Rate),
                                 SizedBox(
                                   width: 5.w,
                                 ),
@@ -581,8 +587,16 @@ Widget _buildProductItem(Product product, int quantity, Function addToCart) {
                                   child: GestureDetector(
                                     onTap: () {
                                       incrementQuantity();
-                                      Provider.of<CartModel>(context, listen: false)
-                                  .updateQuantity(product, 1);
+                                      Provider.of<CartModel>(context,
+                                              listen: false)
+                                          .addToCart(
+                                        Product(
+                                            name: product.name,
+                                            Rate: product.Rate,
+                                            description: product.description,
+                                            imageUrl: product.imageUrl),
+                                      );
+                                      setState(() {});
                                     },
                                     child: Icon(Icons.add_circle_outline_sharp),
                                   ),
@@ -604,8 +618,9 @@ Widget _buildProductItem(Product product, int quantity, Function addToCart) {
                                   child: GestureDetector(
                                     onTap: () {
                                       decrementQuantity();
-                                      Provider.of<CartModel>(context, listen: false)
-                                  .updateQuantity(product, -1);
+                                      Provider.of<CartModel>(context,
+                                              listen: false)
+                                          .updateQuantity(product, -1);
                                     },
                                     child:
                                         Icon(Icons.remove_circle_outline_sharp),
