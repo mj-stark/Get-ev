@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'HomePage.dart'; 
+import 'HomePage.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; 
 
 class CartPage extends StatelessWidget {
   @override
@@ -32,8 +33,8 @@ class CartPage extends StatelessWidget {
                       subtitle: Text(product.Rate.toString()), // Assuming rate is a double
                       leading: Image.network(
                         product.imageUrl,
-                        width: 50,
-                        height: 50,
+                        width: 50.w,
+                        height: 50.h,
                         fit: BoxFit.cover,
                       ),
                       trailing: Row(
@@ -49,7 +50,7 @@ class CartPage extends StatelessWidget {
                           ),
                           Text(
                             '${product.quantity}', // Display quantity
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 18.sp),
                           ),
                           IconButton(
                             icon: Icon(Icons.add),
@@ -66,7 +67,7 @@ class CartPage extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 16.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
