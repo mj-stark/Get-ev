@@ -4,8 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get_ev/CartPage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'WishlistPage.dart';
-import 'package:flutter/foundation.dart';
+
 
 class Product {
   final String name;
@@ -572,7 +571,7 @@ Widget _buildProductItem(Product product, int quantity, Function addToCart) {
                             padding: EdgeInsets.symmetric(horizontal: 5.w),
                             child: Row(
                               children: [
-                                Text(product.Rate),
+                                Text( "₹ " + product.Rate),
                                 SizedBox(
                                   width: 5.w,
                                 ),
@@ -582,16 +581,8 @@ Widget _buildProductItem(Product product, int quantity, Function addToCart) {
                                   child: GestureDetector(
                                     onTap: () {
                                       incrementQuantity();
-                                      Provider.of<CartModel>(context,
-                                              listen: false)
-                                          .addToCart(
-                                        Product(
-                                            name: product.name,
-                                            Rate: product.Rate,
-                                            description: product.description,
-                                            imageUrl: product.imageUrl),
-                                      );
-                                      setState(() {});
+                                      Provider.of<CartModel>(context, listen: false)
+                                  .updateQuantity(product, 1);
                                     },
                                     child: Icon(Icons.add_circle_outline_sharp),
                                   ),
@@ -613,6 +604,8 @@ Widget _buildProductItem(Product product, int quantity, Function addToCart) {
                                   child: GestureDetector(
                                     onTap: () {
                                       decrementQuantity();
+                                      Provider.of<CartModel>(context, listen: false)
+                                  .updateQuantity(product, -1);
                                     },
                                     child:
                                         Icon(Icons.remove_circle_outline_sharp),

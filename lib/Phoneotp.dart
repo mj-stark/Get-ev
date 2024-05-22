@@ -27,8 +27,7 @@ class _PhoneotpState extends State<Phoneotp> {
   String _enteredOTP = '';
 
   Future<void> _generateOTP() async {
-    // Generate OTP logic here
-    // For demo purposes, generating a random 4-digit OTP
+    
     final String generatedOTP = _generateRandomOTP(4);
     
     await _saveOTPToPreferences(generatedOTP);
@@ -37,6 +36,7 @@ class _PhoneotpState extends State<Phoneotp> {
 
   String _generateRandomOTP(int length) {
     final random = Random();
+
     return List.generate(length, (index) => random.nextInt(10)).join();
   }
 
@@ -207,6 +207,11 @@ class _PhoneotpState extends State<Phoneotp> {
             ElevatedButton(
               onPressed: () async {
                 await _generateOTP();
+                setState(() {
+      
+          _otpGenerated = true;
+    });
+                 
               },
               child: Text(
                 'Generate OTP',

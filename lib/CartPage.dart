@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'HomePage.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; 
 
 class CartPage extends StatelessWidget {
@@ -74,8 +76,16 @@ class CartPage extends StatelessWidget {
                     Text('Total: \₹${cart.getTotalBill().toStringAsFixed(2)}'), // Display total bill
                     ElevatedButton(
                       child: Text('Place Order'),
-                      onPressed: () {
-                        // Place order logic here
+                      onPressed: () async {
+                        final double totalAmount = cart.getTotalBill();
+                        final String paytmUrl = 'https://paytm.me/UPI/QR?amt=${totalAmount.toStringAsFixed(2)}&receiver=9047366127';
+                        
+                        Uri paytmUri = Uri.parse(paytmUrl);
+
+                        if (await canLaunchUrl(paytmUri)) {
+                          await launchUrl(paytmUri);
+                        } else {
+                        }
                       },
                     ),
                   ],
