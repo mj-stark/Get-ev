@@ -131,11 +131,10 @@ class _StorePageState extends State<StorePage> {
               switchInCurve: Curves.easeIn,
               switchOutCurve: Curves.easeOut,
               transitionBuilder: (Widget child, Animation<double> animation) {
-                return  FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
               },
               child: GridView.builder(
                 key: UniqueKey(),
@@ -208,8 +207,8 @@ class _StorePageState extends State<StorePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 100,
-                      width: 160,
+                      height: 100.h,
+                      width: 170.w,
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: NetworkImage(product.imageUrl),
@@ -222,7 +221,8 @@ class _StorePageState extends State<StorePage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(4),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -236,7 +236,7 @@ class _StorePageState extends State<StorePage> {
                           Row(
                             children: [
                               Text('₹${product.Rate}'),
-                              SizedBox(width: 5),
+                              SizedBox(width: 5.w),
                               GestureDetector(
                                 onTap: () {
                                   Provider.of<CartModel>(context, listen: false)
@@ -244,9 +244,9 @@ class _StorePageState extends State<StorePage> {
                                 },
                                 child: Icon(Icons.add_circle_outline_sharp),
                               ),
-                              SizedBox(width: 5),
+                              SizedBox(width: 5.w),
                               Text('$quantity'),
-                              SizedBox(width: 5),
+                              SizedBox(width: 5.w),
                               GestureDetector(
                                 onTap: () {
                                   Provider.of<CartModel>(context, listen: false)
@@ -263,9 +263,9 @@ class _StorePageState extends State<StorePage> {
                 ),
               ),
               Positioned(
-                width: 20,
-                top: 5,
-                right: 20,
+                width: 20.w,
+                top: 5.h,
+                right: 20.w,
                 child: IconButton(
                   icon: Icon(
                     Icons.favorite_border_sharp,
