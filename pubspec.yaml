@@ -14,6 +14,7 @@ dependencies:
   provider: ^5.0.0
   google_fonts: ^6.2.1
   url_launcher: ^6.2.6
+  http: ^1.2.1
 
   flutter:
     sdk: flutter

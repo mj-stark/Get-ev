@@ -1,10 +1,88 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:get_ev/Phoneotp.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
+
+  @override
+  _SignupPageState createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late TextEditingController _confirmPasswordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Success'),
+        content: Text('Your details are send!'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _sendUserData(BuildContext context) async {
+    final url =
+        Uri.parse('https://9wtpck13-7229.inc1.devtunnels.ms/api/UserDetails');
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode({
+          'name': _nameController.text,
+          'email': _emailController.text,
+          'password': _passwordController.text,
+          'address': '', // Replace 'string' with the actual address value
+          'phoneNo': '', // Replace 'string' with the actual phone number value
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+     if (response.statusCode >= 200 && response.statusCode < 300) {
+        _showSuccessDialog();
+        print('User data sent successfully');
+      } else {
+        // Request failed, handle error
+        print('Failed to send user data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle error
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +120,10 @@ class SignupPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Center(
+                    Center(
                       heightFactor: 1,
                       child: TextField(
+                        controller: _nameController,
                         decoration: InputDecoration(
                           labelText: 'Full Name',
                           border: OutlineInputBorder(),
@@ -52,9 +131,10 @@ class SignupPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    const Center(
+                    Center(
                       heightFactor: 1,
                       child: TextField(
+                        controller: _emailController,
                         decoration: InputDecoration(
                           labelText: 'Email ID',
                           border: OutlineInputBorder(),
@@ -65,6 +145,7 @@ class SignupPage extends StatelessWidget {
                     Center(
                       heightFactor: 1,
                       child: TextField(
+                        controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: 'Password',
@@ -76,6 +157,7 @@ class SignupPage extends StatelessWidget {
                     Center(
                       heightFactor: 1,
                       child: TextField(
+                        controller: _confirmPasswordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: 'Confirm Password',
@@ -90,6 +172,8 @@ class SignupPage extends StatelessWidget {
                         width: 150.w,
                         child: ElevatedButton.icon(
                           onPressed: () {
+                            _sendUserData(context);
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
