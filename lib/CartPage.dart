@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'HomePage.dart';
+import 'Models/Products.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CartPage extends StatelessWidget {
   @override
@@ -31,7 +32,8 @@ class CartPage extends StatelessWidget {
                     Product product = cart.items[index];
                     return ListTile(
                       title: Text(product.name),
-                      subtitle: Text(product.Rate.toString()), // Assuming rate is a double
+                      subtitle: Text(
+                          product.Rate.toString()), // Assuming rate is a double
                       leading: Image.network(
                         product.imageUrl,
                         width: 50.w,
@@ -68,28 +70,22 @@ class CartPage extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 16.h),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Total: \₹${cart.getTotalBill().toStringAsFixed(2)}'), // Display total bill
+                    Text(
+                        'Total: \₹${cart.getTotalBill().toStringAsFixed(2)}'), // Display total bill
                     ElevatedButton(
                       child: Text('Place Order'),
-                      onPressed: () async {
-                        final double totalAmount = cart.getTotalBill();
-                        final String paytmUrl = 'https://paytm.me/UPI/QR?amt=${totalAmount.toStringAsFixed(2)}&receiver=9047366127';
-                        
-                        Uri paytmUri = Uri.parse(paytmUrl);
-
-                        if (await canLaunchUrl(paytmUri)) {
-                          await launchUrl(paytmUri);
-                        } else {
-                        }
-                      },
+                      onPressed: () {},
                     ),
                   ],
                 ),
               ),
+              SizedBox(
+                height: 10.h,
+              )
             ],
           );
         },
@@ -97,4 +93,3 @@ class CartPage extends StatelessWidget {
     );
   }
 }
-

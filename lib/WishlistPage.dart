@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'HomePage.dart'; 
+import 'HomePage.dart';
+import 'Models/Products.dart';
 
 class WishlistPage extends StatelessWidget {
   @override
@@ -27,7 +28,8 @@ class WishlistPage extends StatelessWidget {
                 trailing: IconButton(
                   icon: Icon(Icons.remove_circle_outline),
                   onPressed: () {
-                    
+                    Provider.of<Wishlist>(context, listen: false)
+                        .removeFromWishlist(product);
                   },
                 ),
               );
