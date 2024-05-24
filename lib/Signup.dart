@@ -71,16 +71,44 @@ class _SignupPageState extends State<SignupPage> {
           'Content-Type': 'application/json',
         },
       );
-     if (response.statusCode >= 200 && response.statusCode < 300) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         _showSuccessDialog();
         print('User data sent successfully');
       } else {
-        // Request failed, handle error
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Success'),
+                  content: Text('Your details are send!'),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                          'Failed to send user data. Status code: ${response.statusCode}'),
+                    ),
+                  ],
+                ));
         print('Failed to send user data. Status code: ${response.statusCode}');
       }
     } catch (e) {
       // Handle error
-      print('Error: $e');
+
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Success'),
+                content: Text('Your details are send!'),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Error: $e'),
+                  ),
+                ],
+              ));
     }
   }
 
