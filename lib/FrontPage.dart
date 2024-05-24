@@ -5,7 +5,13 @@ import 'StorePage.dart';
 import 'WishlistPage.dart';
 
 class FrontPage extends StatefulWidget {
-  const FrontPage({Key? key}) : super(key: key);
+  final String emailorphno;
+  final String password;
+  const FrontPage({
+    Key? key,
+    required this.emailorphno,
+    required this.password,
+  }) : super(key: key);
 
   @override
   _FrontPageState createState() => _FrontPageState();
@@ -23,7 +29,10 @@ class _FrontPageState extends State<FrontPage> {
   Widget _getPage(int index) {
     switch (index) {
       case 0:
-        return HomePage();
+        return HomePage(
+          emailorphno: widget.emailorphno,
+          password: widget.password,
+        );
       case 1:
         return StorePage();
       case 2:
@@ -32,14 +41,17 @@ class _FrontPageState extends State<FrontPage> {
       case 3:
         return ProfilePage();
       default:
-        return HomePage();
+        return HomePage(
+          emailorphno: widget.emailorphno,
+          password: widget.password,
+        );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold( 
+      home: Scaffold(
         body: _getPage(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           unselectedItemColor: Colors.orange,

@@ -117,11 +117,27 @@ class CartCount extends ValueNotifier<int> {
   CartCount(int value) : super(value);
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  final String emailorphno;
+  final String password;
+
+  const HomePage({
+    Key? key,
+    
+    required this.emailorphno,
+    required this.password,
+  }) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final CartCount cartCount = CartCount(0);
+  int quantity = 0;
+
   @override
   Widget build(BuildContext context) {
-    final CartCount cartCount = CartCount(0);
-    int quantity = 0;
     int totalQuantity = Provider.of<CartModel>(context).getTotalQuantity();
     return Scaffold(
       body: Container(
@@ -393,194 +409,194 @@ class HomePage extends StatelessWidget {
               ),
             )));
   }
-}
 
-Widget _buildProductItem(Product product, Function addToCart) {
-  return Consumer<CartModel>(
-    builder: (context, cart, child) {
-      int quantity = cart.items
-          .where((element) => element.name == product.name)
-          .map((e) => e.quantity)
-          .fold(0, (prev, quantity) => prev + quantity);
+  Widget _buildProductItem(Product product, Function addToCart) {
+    return Consumer<CartModel>(
+      builder: (context, cart, child) {
+        int quantity = cart.items
+            .where((element) => element.name == product.name)
+            .map((e) => e.quantity)
+            .fold(0, (prev, quantity) => prev + quantity);
 
-      return GestureDetector(
-        onTap: () {
-          showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(50)),
-                height: 600.h,
-                child: Column(
-                  children: [
-                    Image.network(
-                      product.imageUrl,
-                      height: 250.h,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      product.name,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 20.sp, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10.h),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      child: Text(
-                        product.description,
+        return GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(50)),
+                  height: 600.h,
+                  child: Column(
+                    children: [
+                      Image.network(
+                        product.imageUrl,
+                        height: 250.h,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(height: 10.h),
+                      Text(
+                        product.name,
+                        textAlign: TextAlign.start,
                         style: TextStyle(
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: GoogleFonts.montserrat().fontFamily),
+                            fontSize: 20.sp, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            cart.addToCart(product);
-                            Navigator.pop(context);
-                          },
-                          child: Text('Add to Cart'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
-          child: Stack(
-            children: [
-              Container(
-                width: 150.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.r),
-                  border: Border.all(style: BorderStyle.solid, width: 0.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white,
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: Offset(5, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 130.h,
-                      width: 160.w,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(product.imageUrl),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15.r),
-                          topRight: Radius.circular(15.r),
+                      SizedBox(height: 10.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: Text(
+                          product.description,
+                          style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: GoogleFonts.montserrat().fontFamily),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(4.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      SizedBox(height: 10.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            height: 1.h,
-                          ),
-                          Text(
-                            product.name,
-                            style: TextStyle(
-                              fontFamily: GoogleFonts.aBeeZee().fontFamily,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5.w),
-                            child: Row(
-                              children: [
-                                Text("₹ " + product.Rate),
-                                SizedBox(
-                                  width: 5.w,
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 1.w),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      cart.addToCart(product);
-                                    },
-                                    child: Icon(Icons.add_circle_outline_sharp),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 5.w,
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 1.w),
-                                  child: Text("$quantity"),
-                                ),
-                                SizedBox(
-                                  width: 5.w,
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 1.w),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      cart.removeFromCart(product);
-                                    },
-                                    child:
-                                        Icon(Icons.remove_circle_outline_sharp),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          ElevatedButton(
+                            onPressed: () {
+                              cart.addToCart(product);
+                              Navigator.pop(context);
+                            },
+                            child: Text('Add to Cart'),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                width: 20.w,
-                top: 5.h,
-                right: 20.w,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.favorite_border_sharp,
-                    color: Colors.white,
+                    ],
                   ),
-                  onPressed: () {
-                    Provider.of<Wishlist>(context, listen: false).addToWishlist(
-                      Product(
-                          name: product.name,
-                          Rate: product.Rate,
-                          description: product.description,
-                          imageUrl: product.imageUrl),
-                    );
-                  },
+                );
+              },
+            );
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
+            child: Stack(
+              children: [
+                Container(
+                  width: 150.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.r),
+                    border: Border.all(style: BorderStyle.solid, width: 0.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white,
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(5, 5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 130.h,
+                        width: 160.w,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(product.imageUrl),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.r),
+                            topRight: Radius.circular(15.r),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(4.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 1.h,
+                            ),
+                            Text(
+                              product.name,
+                              style: TextStyle(
+                                fontFamily: GoogleFonts.aBeeZee().fontFamily,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
+                              child: Row(
+                                children: [
+                                  Text("₹ " + product.Rate),
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 1.w),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        cart.addToCart(product);
+                                      },
+                                      child: Icon(Icons.add_circle_outline_sharp),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 1.w),
+                                    child: Text("$quantity"),
+                                  ),
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 1.w),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        cart.removeFromCart(product);
+                                      },
+                                      child:
+                                          Icon(Icons.remove_circle_outline_sharp),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Positioned(
+                  width: 20.w,
+                  top: 5.h,
+                  right: 20.w,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.favorite_border_sharp,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Provider.of<Wishlist>(context, listen: false).addToWishlist(
+                        Product(
+                            name: product.name,
+                            Rate: product.Rate,
+                            description: product.description,
+                            imageUrl: product.imageUrl),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+  }
 }
