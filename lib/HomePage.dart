@@ -264,7 +264,7 @@ class HomePage extends StatelessWidget {
               children: [
                 _buildSectionTitle('Categories'),
                 SizedBox(
-                  width: 200.w,
+                  width: 210.w,
                 ),
                 GestureDetector(
                   onTap: () {

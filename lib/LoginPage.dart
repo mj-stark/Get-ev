@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get_ev/FrontPage.dart';
 import 'package:get_ev/Signup.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,9 +19,9 @@ class _LoginPageState extends State<LoginPage> {
   late bool _showOTPInput = false;
   late TextEditingController _otpController = TextEditingController();
   late bool _otpVerified = false;
-  late TextEditingController _passwordController = TextEditingController();
-  late TextEditingController _confirmPasswordController =
-      TextEditingController();
+  late TextEditingController emailOrPhone = TextEditingController();
+  late TextEditingController password = TextEditingController();
+
   late bool _isProcessing = false;
 
   Future<void> _generateOTP() async {
@@ -57,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
   void _changePassword() {
     // Implement password change logic here
     // For demo purposes, just print the new password
-    print('New Password: ${_passwordController.text}');
+    print('New Password: ${password.text}');
 
     // Show success alert
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -81,10 +84,98 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  Future<void> _sendUserData(BuildContext context) async {
+    setState(() {
+      _isProcessing = true;
+    });
+
+    final String emailOrPhoneText = emailOrPhone.text;
+    final String passwordText = password.text;
+
+    final url = Uri.parse(
+        'https://9wtpck13-7229.inc1.devtunnels.ms/api/UserDetails/verify?emailOrPhone=$emailOrPhoneText&password=$passwordText');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        // Successful login
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const FrontPage(),
+          ),
+        );
+      } else {
+        // Failed login
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Invalid credentials. Please try again.'),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      // Error occurred
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Failed to login. Error: $e'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      setState(() {
+        _isProcessing = false;
+      });
+    }
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Success'),
+        content: Text('Your account has been created!'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+    
+    
+    
+
+    
+
     ScreenUtil.init(context,
         minTextAdapt: true, designSize: const Size(412, 868));
     return Scaffold(
@@ -137,6 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 10.h,
                         ),
                         TextField(
+                          controller: emailOrPhone,
                           decoration: InputDecoration(
                             hintText: 'Email or Phone Number',
                             border: OutlineInputBorder(),
@@ -146,6 +238,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: 20.h,
                         ),
                         TextField(
+                          controller: password,
                           decoration: InputDecoration(
                             hintText: 'Password',
                             border: OutlineInputBorder(),
@@ -285,8 +378,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       const SizedBox(
                                                           height: 16),
                                                       TextField(
-                                                        controller:
-                                                            _passwordController,
+                                                        controller: password,
                                                         decoration:
                                                             const InputDecoration(
                                                           labelText:
@@ -299,8 +391,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       const SizedBox(
                                                           height: 16),
                                                       TextField(
-                                                        controller:
-                                                            _confirmPasswordController,
+                                                        controller: password,
                                                         decoration:
                                                             const InputDecoration(
                                                           labelText:
@@ -364,14 +455,8 @@ class _LoginPageState extends State<LoginPage> {
                           width: 150.w,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return const FrontPage();
-                                  },
-                                ),
-                              );
+                              _sendUserData(context);
+                              
                             },
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.symmetric(vertical: 15.h),

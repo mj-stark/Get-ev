@@ -5,6 +5,7 @@ import 'package:get_ev/Phoneotp.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
@@ -17,6 +18,7 @@ class _SignupPageState extends State<SignupPage> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   late TextEditingController _confirmPasswordController;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -32,7 +34,7 @@ class _SignupPageState extends State<SignupPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Success'),
-        content: Text('Your details are send!'),
+        content: Text('Your details are sent!'),
         actions: [
           ElevatedButton(
             onPressed: () {
@@ -54,61 +56,23 @@ class _SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
-  Future<void> _sendUserData(BuildContext context) async {
-    final url =
-        Uri.parse('https://9wtpck13-7229.inc1.devtunnels.ms/api/UserDetails');
-    try {
-      final response = await http.post(
-        url,
-        body: jsonEncode({
-          'name': _nameController.text,
-          'email': _emailController.text,
-          'password': _passwordController.text,
-          'address': '', // Replace 'string' with the actual address value
-          'phoneNo': '', // Replace 'string' with the actual phone number value
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        _showSuccessDialog();
-        print('User data sent successfully');
-      } else {
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text('Success'),
-                  content: Text('Your details are send!'),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                          'Failed to send user data. Status code: ${response.statusCode}'),
-                    ),
-                  ],
-                ));
-        print('Failed to send user data. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      // Handle error
+  
 
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: Text('Success'),
-                content: Text('Your details are send!'),
-                actions: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Error: $e'),
-                  ),
-                ],
-              ));
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return Phoneotp(
+              name: _nameController.text,
+              email: _emailController.text,
+              password: _passwordController.text,
+            );
+          },
+        ),
+      );
     }
   }
 
@@ -138,102 +102,119 @@ class _SignupPageState extends State<SignupPage> {
       ),
       body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 20.w, vertical: 20.h), // Responsive padding
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      heightFactor: 1,
-                      child: TextField(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 20.h,
+                  ), // Responsive padding
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFormField(
                         controller: _nameController,
                         decoration: InputDecoration(
                           labelText: 'Full Name',
                           border: OutlineInputBorder(),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    SizedBox(height: 20.h),
-                    Center(
-                      heightFactor: 1,
-                      child: TextField(
+                      SizedBox(height: 20.h),
+                      TextFormField(
                         controller: _emailController,
                         decoration: InputDecoration(
                           labelText: 'Email ID',
                           border: OutlineInputBorder(),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!RegExp(
+                                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                              .hasMatch(value)) {
+                            return 'Please enter a valid email';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    SizedBox(height: 20.h),
-                    Center(
-                      heightFactor: 1,
-                      child: TextField(
+                      SizedBox(height: 20.h),
+                      TextFormField(
                         controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           border: OutlineInputBorder(),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a password';
+                          }
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters long';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    SizedBox(height: 20.h),
-                    Center(
-                      heightFactor: 1,
-                      child: TextField(
+                      SizedBox(height: 20.h),
+                      TextFormField(
                         controller: _confirmPasswordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: 'Confirm Password',
                           border: OutlineInputBorder(),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please confirm your password';
+                          }
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    SizedBox(height: 20.h),
-                    Center(
-                      child: Container(
-                        height: 50.h,
-                        width: 150.w,
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            _sendUserData(context);
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return Phoneotp();
-                                },
+                      SizedBox(height: 20.h),
+                      Center(
+                        child: Container(
+                          height: 50.h,
+                          width: 150.w,
+                          child: ElevatedButton.icon(
+                            onPressed: _submitForm,
+                            icon: Icon(Icons.arrow_forward),
+                            label: Text(
+                              'Next',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15.sp, // Responsive font size
                               ),
-                            );
-                          },
-                          icon: Icon(Icons.arrow_forward),
-                          label: Text(
-                            'Next',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.sp, // Responsive font size
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(screenHeight * 0.03),
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    screenHeight * 0.03),
+                              ),
+                              backgroundColor: Colors.orange,
+                              foregroundColor: Colors.white,
                             ),
-                            backgroundColor: Colors.orange,
-                            foregroundColor: Colors.white,
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

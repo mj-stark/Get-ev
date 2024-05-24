@@ -1,12 +1,23 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:get_ev/LoginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Phoneotp extends StatefulWidget {
-  const Phoneotp({Key? key}) : super(key: key);
+  final String name;
+  final String email;
+  final String password;
+
+  const Phoneotp(
+      {Key? key,
+      required this.name,
+      required this.email,
+      required this.password})
+      : super(key: key);
 
   @override
   State<Phoneotp> createState() => _PhoneotpState();
@@ -27,54 +38,70 @@ class _PhoneotpState extends State<Phoneotp> {
   String _enteredOTP = '';
 
   Future<void> _generateOTP() async {
-    
     final String generatedOTP = _generateRandomOTP(4);
-    
+
     await _saveOTPToPreferences(generatedOTP);
     _showOTPDialog();
   }
 
-  String _generateRandomOTP(int length) {
-    final random = Random();
-
-    return List.generate(length, (index) => random.nextInt(10)).join();
-  }
-
-  Future<void> _saveOTPToPreferences(String otp) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('otp', otp);
-  }
-
-  Future<String?> _getSavedOTPFromPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('otp');
-  }
-
-  void _showOTPDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('OTP'),
-        content: FutureBuilder<String?>(
-          future: _getSavedOTPFromPreferences(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // Show loading indicator while fetching OTP
-            } else {
-              return Text('Your OTP is ${snapshot.data ?? _enteredOTP}');
-            }
-          },
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('OK'),
+  Future<void> _sendUserData(BuildContext context) async {
+    final url = Uri.parse(
+        'https://9wtpck13-7229.inc1.devtunnels.ms/api/UserDetails');
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode({
+          'name': widget.name,
+          'email': widget.email,
+          'password': widget.password,
+          'address': '', // Replace 'string' with the actual address value
+          'phoneNo': _phoneNumber, // Use the phone number entered by the user
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        _showSuccessDialog();
+        print('User data sent successfully');
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text(
+                'Failed to send user data. Status code: ${response.statusCode}'),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        );
+        print(
+            'Failed to send user data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle error
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to send user data. Error: $e'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   void _showSuccessDialog() {
@@ -139,9 +166,10 @@ class _PhoneotpState extends State<Phoneotp> {
         title: Text(
           'OTP Verification',
           style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 20.sp),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20.sp,
+          ),
         ),
       ),
       body: Padding(
@@ -208,10 +236,8 @@ class _PhoneotpState extends State<Phoneotp> {
               onPressed: () async {
                 await _generateOTP();
                 setState(() {
-      
-          _otpGenerated = true;
-    });
-                 
+                  _otpGenerated = true;
+                });
               },
               child: Text(
                 'Generate OTP',
@@ -231,13 +257,14 @@ class _PhoneotpState extends State<Phoneotp> {
               onPressed: () async {
                 final savedOTP = await _getSavedOTPFromPreferences();
                 setState(() {
-      _enteredOTP = controllers[0].text +
-          controllers[1].text +
-          controllers[2].text +
-          controllers[3].text;
-      _otpGenerated = true;
-    });
+                  _enteredOTP = controllers[0].text +
+                      controllers[1].text +
+                      controllers[2].text +
+                      controllers[3].text;
+                  _otpGenerated = true;
+                });
                 if (_enteredOTP == savedOTP) {
+                  await _sendUserData(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -246,7 +273,6 @@ class _PhoneotpState extends State<Phoneotp> {
                       },
                     ),
                   );
-                  _showSuccessDialog();
                 } else {
                   // Handle incorrect OTP
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -271,6 +297,49 @@ class _PhoneotpState extends State<Phoneotp> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  String _generateRandomOTP(int length) {
+    final random = Random();
+
+    return List.generate(length, (index) => random.nextInt(10)).join();
+  }
+
+  Future<void> _saveOTPToPreferences(String otp) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('otp', otp);
+  }
+
+  Future<String?> _getSavedOTPFromPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('otp');
+  }
+
+  void _showOTPDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('OTP'),
+        content: FutureBuilder<String?>(
+          future: _getSavedOTPFromPreferences(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else {
+              return Text('Your OTP is ${snapshot.data ?? _enteredOTP}');
+            }
+          },
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
       ),
     );
   }
