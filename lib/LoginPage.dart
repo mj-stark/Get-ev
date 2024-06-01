@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_ev/FrontPage.dart';
 import 'package:get_ev/Signup.dart';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,22 +16,41 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late String _phoneNumber;
+  late String _phoneNumberoremail;
+  late String _password;
   late bool _phoneNumber1 = true;
   late bool _showOTPInput = false;
   late TextEditingController _otpController = TextEditingController();
   late bool _otpVerified = false;
   late TextEditingController emailOrPhone = TextEditingController();
   late TextEditingController password = TextEditingController();
+  late TextEditingController emailOrPhoneupdate = TextEditingController();
+  late TextEditingController passwordConfirm = TextEditingController();
+  late TextEditingController passwordNew = TextEditingController();
 
   late bool _isProcessing = false;
 
-  Future<void> _generateOTP() async {
-    // Generate OTP logic here
-    // For demo purposes, setting a default OTP
-    final String generatedOTP = '1234';
+  String _generateRandomOTP(int length) {
+    final random = Random();
 
-    // Show the OTP in an alert dialog
+    return List.generate(length, (index) => random.nextInt(10)).join();
+  }
+
+  Future<void> _saveOTPToPreferences(String otp) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('otp', otp);
+  }
+
+  Future<String?> _getSavedOTPFromPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('otp');
+  }
+
+  Future<void> _generateOTP() async {
+    final String generatedOTP = _generateRandomOTP(4);
+
+    await _saveOTPToPreferences(generatedOTP);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -58,29 +79,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _changePassword() {
-    // Implement password change logic here
-    // For demo purposes, just print the new password
-    print('New Password: ${password.text}');
-
-    // Show success alert
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Success'),
-            content: const Text('Your password has been changed successfully.'),
-            actions: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+    sendUpdateRequest();
+    setState(() {
+      _showOTPInput = false;
+      _otpVerified = false;
+      _phoneNumber1 = true;
     });
   }
 
@@ -103,7 +106,10 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FrontPage(emailorphno: emailOrPhoneText,password: passwordText,),
+            builder: (context) => FrontPage(
+              emailorphno: emailOrPhoneText,
+              password: passwordText,
+            ),
           ),
         );
       } else {
@@ -148,6 +154,45 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> sendUpdateRequest() async {
+    String apiUrl =
+        'https://9wtpck13-7229.inc1.devtunnels.ms/api/UserDetails/update/${emailOrPhoneupdate.text}';
+    Map<String, String> headers = {
+      "accept": "/",
+      "Content-Type": "application/json"
+    };
+    String jsonBody = jsonEncode({
+      "email": emailOrPhoneupdate.text,
+      "password": passwordConfirm.text,
+    });
+
+    // Sending PUT request
+    var response =
+        await http.put(Uri.parse(apiUrl), headers: headers, body: jsonBody);
+
+    // Handling response
+    if (response.statusCode == 200 || response.statusCode < 300) {
+      // Success
+      print('User details updated successfully');
+      // Display a success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password have been updated successfully!')),
+      );
+      // Hide OTP field and buttons after successful update
+    } else {
+      // Error
+      print(
+          'Failed to update user details. Status code: ${response.statusCode}');
+      // Display an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content:
+                Text('Failed to update password. Please try again later.')),
+      );
+      return;
+    }
+  }
+
   void _showSuccessDialog() {
     showDialog(
       context: context,
@@ -170,11 +215,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    
-    
-    
-
-    
 
     ScreenUtil.init(context,
         minTextAdapt: true, designSize: const Size(412, 868));
@@ -287,6 +327,8 @@ class _LoginPageState extends State<LoginPage> {
                                                       const SizedBox(
                                                           height: 16),
                                                       TextField(
+                                                        controller:
+                                                            emailOrPhoneupdate,
                                                         decoration:
                                                             const InputDecoration(
                                                           labelText:
@@ -296,8 +338,11 @@ class _LoginPageState extends State<LoginPage> {
                                                         ),
                                                         onChanged: (value) {
                                                           setState(() {
-                                                            _phoneNumber =
-                                                                value;
+                                                            emailOrPhoneupdate
+                                                                .text = value;
+                                                            _phoneNumberoremail =
+                                                                emailOrPhoneupdate
+                                                                    .text;
                                                           });
                                                         },
                                                       ),
@@ -352,15 +397,30 @@ class _LoginPageState extends State<LoginPage> {
                                                       ElevatedButton(
                                                         onPressed: () {
                                                           setState(() {
+                                                            final savedOTP =
+                                                                _getSavedOTPFromPreferences();
+                                                            if (savedOTP !=
+                                                                savedOTP) {
+                                                              ScaffoldMessenger
+                                                                      .of(context)
+                                                                  .showSnackBar(
+                                                                SnackBar(
+                                                                    content: Text(
+                                                                        'Invalid OTP!')),
+                                                              );
+                                                              return;
+                                                            }
                                                             _otpVerified = true;
                                                             _isProcessing =
                                                                 true;
                                                           });
+
                                                           _verifyOTP();
                                                           setState(() {
                                                             _showOTPInput =
                                                                 false;
                                                             _otpVerified = true;
+
                                                             _isProcessing =
                                                                 false;
                                                           });
@@ -378,7 +438,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       const SizedBox(
                                                           height: 16),
                                                       TextField(
-                                                        controller: password,
+                                                        controller: passwordNew,
                                                         decoration:
                                                             const InputDecoration(
                                                           labelText:
@@ -391,7 +451,8 @@ class _LoginPageState extends State<LoginPage> {
                                                       const SizedBox(
                                                           height: 16),
                                                       TextField(
-                                                        controller: password,
+                                                        controller:
+                                                            passwordConfirm,
                                                         decoration:
                                                             const InputDecoration(
                                                           labelText:
@@ -405,8 +466,26 @@ class _LoginPageState extends State<LoginPage> {
                                                           height: 16),
                                                       ElevatedButton(
                                                         onPressed: () {
+                                                          if (passwordConfirm
+                                                                  .text !=
+                                                              passwordNew
+                                                                  .text) {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              SnackBar(
+                                                                  content: Text(
+                                                                      'New Password and Confirm Password must be same')),
+                                                            );
+                                                            return;
+                                                          }
+
                                                           setState(() {
+                                                            _password =
+                                                                passwordConfirm
+                                                                    .text;
                                                             _otpVerified = true;
+
                                                             _changePassword();
                                                             Navigator.pop(
                                                                 context);
@@ -456,7 +535,6 @@ class _LoginPageState extends State<LoginPage> {
                           child: ElevatedButton(
                             onPressed: () {
                               _sendUserData(context);
-                              
                             },
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.symmetric(vertical: 15.h),

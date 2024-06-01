@@ -67,7 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
     };
     String jsonBody = jsonEncode({
       "name": name,
-      "password": "mj@123",
+      "password": "",
       "address": address,
       "email": email,
       "phoneNo": phoneNo
